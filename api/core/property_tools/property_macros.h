@@ -13,12 +13,12 @@
  * limitations under the License.
  */
 
-#ifndef CORE__ECS_HELPER__PROPERTY_TOOLS__PROPERTY_MACROS_H
-#define CORE__ECS_HELPER__PROPERTY_TOOLS__PROPERTY_MACROS_H
+#ifndef API_CORE_PROPERTY_TOOLS_PROPERTY_MACROS_H
+#define API_CORE_PROPERTY_TOOLS_PROPERTY_MACROS_H
 
-#ifndef BEGIN_PROPERTY
+#ifndef NO_MEMBERS
 // Include actual macros, with the core property metadatas.
-#include "PropertyTools/core_metadata.inl"
+#include <core/property_tools/core_metadata.inl>
 #endif
 
 #ifdef IMPLEMENT_MANAGER
@@ -35,18 +35,22 @@
 #undef END_COMPONENT_EXT
 #undef END_COMPONENT2
 
+// Helpers which can be used when defining a component manager with the help of component_struct_macros.h.
 #define BEGIN_COMPONENT(a, b)
 #define ARRAY_VALUE(...)
 #define VALUE(val)
-#define DEFINE_PROPERTY(type, name, displayname, flags, value) DECL_PROPERTY2(COMPTYPE, name, displayname, flags)
+#define DEFINE_PROPERTY(type, name, displayname, flags, value) MEMBER_PROPERTY(name, displayname, flags),
 #define DEFINE_BITFIELD_PROPERTY(type, name, displayname, flags, value, enumeration) \
-    DECL_BITFIELD_PROPERTY(COMPTYPE, name, displayname, flags, enumeration)
-#define DEFINE_ARRAY_PROPERTY(type, count, name, displayname, flags, value) \
-    DECL_PROPERTY2(COMPTYPE, name, displayname, flags)
+    BITFIELD_MEMBER_PROPERTY(name, displayname, flags, enumeration),
+#define DEFINE_ARRAY_PROPERTY(type, count, name, displayname, flags, value) MEMBER_PROPERTY(name, displayname, flags),
 #define BEGIN_COMPONENT_MANAGER(a, b, c)
 #define END_COMPONENT_MANAGER(a, b, c)
 #define END_COMPONENT(a, b, c)
 #define END_COMPONENT_EXT(a, b, c, d)
+#define BEGIN_PROPERTY(dataType, storageName) \
+    using COMPTYPE = dataType;                \
+    static constexpr CORE_NS::Property storageName[] = {
+#define END_PROPERTY() }
 #endif
 
-#endif // CORE__ECS_HELPER__PROPERTY_TOOLS__PROPERTY_MACROS_H
+#endif // API_CORE_PROPERTY_TOOLS_PROPERTY_MACROS_H

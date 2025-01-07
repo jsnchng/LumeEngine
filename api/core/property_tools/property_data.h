@@ -13,10 +13,9 @@
  * limitations under the License.
  */
 
-#ifndef CORE__ECS_HELPER__PROPERTY_TOOLS__PROPERTY_DATA_H
-#define CORE__ECS_HELPER__PROPERTY_TOOLS__PROPERTY_DATA_H
+#ifndef API_CORE_PROPERTY_TOOLS_PROPERTY_DATA_H
+#define API_CORE_PROPERTY_TOOLS_PROPERTY_DATA_H
 
-#include <PropertyTools/property_value.h>
 #include <cstddef>
 #include <cstdint>
 
@@ -92,19 +91,6 @@ public:
     BASE_NS::array_view<const Property> MetaData() const;
     const Property* MetaData(size_t index) const;
 
-    // deprecated accessors..  (PropertyValue is deprecated)
-    PropertyValue Get(size_t index);
-    PropertyValue Get(size_t index) const;
-
-    PropertyValue Get(BASE_NS::string_view name);
-    PropertyValue Get(BASE_NS::string_view name) const;
-
-    PropertyValue operator[](size_t index);
-    PropertyValue operator[](size_t index) const;
-
-    PropertyValue operator[](const BASE_NS::string_view& name);
-    PropertyValue operator[](const BASE_NS::string_view& name) const;
-
     // Implement the IPropertyHandle api.
     const IPropertyApi* Owner() const override;
     size_t Size() const override;
@@ -126,4 +112,4 @@ private:
 };
 CORE_END_NAMESPACE()
 
-#endif // CORE__ECS_HELPER__PROPERTY_TOOLS__PROPERTY_DATA_H
+#endif // API_CORE_PROPERTY_TOOLS_PROPERTY_DATA_H

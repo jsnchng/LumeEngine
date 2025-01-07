@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023-2024 Huawei Device Co., Ltd.
+ * Copyright (c) 2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -13,7 +13,6 @@
  * limitations under the License.
  */
 
-#include <PropertyTools/property_api_impl.h>
 #include <new>
 
 #include <base/containers/array_view.h>
@@ -24,6 +23,7 @@
 #include <core/property/intf_property_api.h>
 #include <core/property/intf_property_handle.h>
 #include <core/property/property.h>
+#include <core/property_tools/property_api_impl.h>
 
 CORE_BEGIN_NAMESPACE()
 template<typename BlockType>
@@ -150,31 +150,39 @@ size_t PropertyApiImpl<BlockType>::Size() const
 template<typename BlockType>
 const void* PropertyApiImpl<BlockType>::RLock() const
 {
+#ifndef NDEBUG
     CORE_ASSERT(!wLocked_);
     rLocked_++;
+#endif
     return data_;
 }
 
 template<typename BlockType>
 void PropertyApiImpl<BlockType>::RUnlock() const
 {
+#ifndef NDEBUG
     CORE_ASSERT(rLocked_ > 0);
     rLocked_--;
+#endif
 }
 
 template<typename BlockType>
 void* PropertyApiImpl<BlockType>::WLock()
 {
+#ifndef NDEBUG
     CORE_ASSERT(rLocked_ <= 1 && !wLocked_);
     wLocked_ = true;
+#endif
     return data_;
 }
 
 template<typename BlockType>
 void PropertyApiImpl<BlockType>::WUnlock()
 {
+#ifndef NDEBUG
     CORE_ASSERT(wLocked_);
     wLocked_ = false;
+#endif
     generationCount_++;
 }
 

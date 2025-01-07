@@ -13,27 +13,19 @@
  * limitations under the License.
  */
 
-#ifndef CORE_OS_LINUX_LIBRARY_MAC_H
-#define CORE_OS_LINUX_LIBRARY_MAC_H
+#ifndef API_CORE_OS_COMMON_PLATFORM_TRACE_INFO_H
+#define API_CORE_OS_COMMON_PLATFORM_TRACE_INFO_H
 
+#include <base/namespace.h>
+#include <base/util/uid.h>
 #include <core/namespace.h>
-
-#include "os/intf_library.h"
+#include <core/perf/intf_performance_trace.h>
 
 CORE_BEGIN_NAMESPACE()
-class LibraryMac final : public ILibrary {
-public:
-    explicit LibraryMac(const BASE_NS::string_view filename);
-    ~LibraryMac() override;
-
-    IPlugin* GetPlugin() const override;
-
-protected:
-    void Destroy() override;
-
-private:
-    void* libraryHandle_ { nullptr };
-};
+constexpr BASE_NS::Uid GetDefaultTrace()
+{
+    return IPerformanceTrace::TRACY_UID;
+}
 CORE_END_NAMESPACE()
 
-#endif // CORE_OS_LINUX_LIBRARY_MAC_H
+#endif // API_CORE_OS_COMMON_PLATFORM_TRACE_INFO_H

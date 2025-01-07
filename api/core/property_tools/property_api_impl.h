@@ -13,8 +13,8 @@
  * limitations under the License.
  */
 
-#ifndef CORE__ECS_HELPER__PROPERTY_TOOLS__PROPERTY_API_IMPL_H
-#define CORE__ECS_HELPER__PROPERTY_TOOLS__PROPERTY_API_IMPL_H
+#ifndef API_CORE_PROPERTY_TOOLS_PROPERTY_API_IMPL_H
+#define API_CORE_PROPERTY_TOOLS_PROPERTY_API_IMPL_H
 
 #include <cstddef>
 #include <cstdint>
@@ -61,10 +61,12 @@ private:
     BlockType* data_ { nullptr };
     BASE_NS::array_view<const Property> componentMetadata_;
     uint64_t typeHash_ { 0 };
-    mutable uint32_t rLocked_ { 0 };
     uint32_t generationCount_ { 0 };
+#ifndef NDEBUG
+    mutable uint32_t rLocked_ { 0 };
     mutable bool wLocked_ { false };
+#endif
 };
 CORE_END_NAMESPACE()
 
-#endif // CORE__ECS_HELPER__PROPERTY_TOOLS__PROPERTY_API_IMPL_H
+#endif // API_CORE_PROPERTY_TOOLS_PROPERTY_API_IMPL_H

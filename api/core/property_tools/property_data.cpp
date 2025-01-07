@@ -13,9 +13,6 @@
  * limitations under the License.
  */
 
-#include "PropertyTools/property_data.h"
-
-#include <PropertyTools/property_value.h>
 #include <algorithm>
 #include <climits>
 #include <cstdlib>
@@ -25,10 +22,10 @@
 #include <base/containers/string.h>
 #include <base/containers/string_view.h>
 #include <base/util/compile_time_hashes.h>
-#include <core/log.h>
 #include <core/property/intf_property_api.h>
 #include <core/property/intf_property_handle.h>
 #include <core/property/property.h>
+#include <core/property_tools/property_data.h>
 
 using namespace CORE_NS;
 using BASE_NS::array_view;
@@ -156,7 +153,6 @@ PropertyData::PropertyData()
 bool PropertyData::WLock(IPropertyHandle& handle) // no-copy direct-access (Locks the datahandle);
 {
     if (dataHandle_ || dataHandleW_) {
-        CORE_LOG_E("dataHandle_ or dataHandleW_ is null");
         return false;
     }
     dataHandleW_ = &handle;
@@ -182,9 +178,9 @@ PropertyData::PropertyOffset PropertyData::WLock(IPropertyHandle& handle, const 
 
 bool PropertyData::WUnlock(const IPropertyHandle& handle) // (releases the datahandle lock, and removes ref)
 {
-    CORE_ASSERT(dataHandleW_);
-    CORE_ASSERT(dataHandleW_ == dataHandle_);
-    CORE_ASSERT(dataHandleW_ == &handle);
+    BASE_ASSERT(dataHandleW_);
+    BASE_ASSERT(dataHandleW_ == dataHandle_);
+    BASE_ASSERT(dataHandleW_ == &handle);
     if (dataHandleW_ == &handle) {
         if (dataHandleW_) {
             dataHandleW_->WUnlock();
@@ -198,7 +194,6 @@ bool PropertyData::WUnlock(const IPropertyHandle& handle) // (releases the datah
 bool PropertyData::RLock(const IPropertyHandle& handle) // no-copy direct-access (Locks the datahandle);
 {
     if (dataHandle_ || dataHandleW_) {
-        CORE_LOG_E("dataHandle_ or dataHandleW_ is null");
         return false;
     }
     dataHandleW_ = nullptr;
@@ -224,9 +219,9 @@ PropertyData::PropertyOffset PropertyData::RLock(const IPropertyHandle& handle, 
 
 bool PropertyData::RUnlock(const IPropertyHandle& handle) // (releases the datahandle lock, and removes ref)
 {
-    CORE_ASSERT(dataHandle_);
-    CORE_ASSERT(dataHandleW_ == nullptr);
-    CORE_ASSERT(dataHandle_ == &handle);
+    BASE_ASSERT(dataHandle_);
+    BASE_ASSERT(dataHandleW_ == nullptr);
+    BASE_ASSERT(dataHandle_ == &handle);
     if (dataHandle_ == &handle) {
         if (dataHandle_) {
             dataHandle_->RUnlock();
@@ -292,32 +287,6 @@ const Property* PropertyData::MetaData(size_t index) const
     return nullptr;
 }
 
-PropertyValue PropertyData::Get(size_t index)
-{
-    if (owner_ && dataW_) {
-        const auto& props = owner_->MetaData();
-        if (index < props.size()) {
-            const auto& meta = props[index];
-            return PropertyValue(&meta, static_cast<void*>(dataW_ + meta.offset), meta.count);
-        }
-    }
-    return PropertyValue();
-}
-
-PropertyValue PropertyData::Get(size_t index) const
-{
-    if (owner_ && data_) {
-        const auto& props = owner_->MetaData();
-        if (index < props.size()) {
-            const auto& meta = props[index];
-            return PropertyValue(&meta,
-                const_cast<void*>(static_cast<const void*>(static_cast<const uint8_t*>(data_) + meta.offset)),
-                meta.count);
-        }
-    }
-    return PropertyValue();
-}
-
 size_t PropertyData::PropertyCount() const
 {
     if (owner_) {
@@ -325,60 +294,6 @@ size_t PropertyData::PropertyCount() const
         return props.size();
     }
     return 0;
-}
-
-PropertyValue PropertyData::Get(const string_view name)
-{
-    if (owner_ && dataW_) {
-        const auto& props = owner_->MetaData();
-        if (!props.empty()) {
-            const auto nameHash = FNV1aHash(name.data(), name.size());
-            for (const auto& meta : props) {
-                if (meta.hash == nameHash && meta.name == name) {
-                    return PropertyValue(&meta, static_cast<void*>(dataW_ + meta.offset), meta.count);
-                }
-            }
-        }
-    }
-    return PropertyValue();
-}
-
-PropertyValue PropertyData::Get(const string_view name) const
-{
-    if (owner_ && data_) {
-        const auto& props = owner_->MetaData();
-        if (!props.empty()) {
-            const auto nameHash = FNV1aHash(name.data(), name.size());
-            for (const auto& meta : props) {
-                if (meta.hash == nameHash && meta.name == name) {
-                    return PropertyValue(&meta,
-                        const_cast<void*>(static_cast<const void*>(static_cast<const uint8_t*>(data_) + meta.offset)),
-                        meta.count);
-                }
-            }
-        }
-    }
-    return PropertyValue();
-}
-
-PropertyValue PropertyData::operator[](size_t index)
-{
-    return Get(index);
-}
-
-PropertyValue PropertyData::operator[](size_t index) const
-{
-    return Get(index);
-}
-
-PropertyValue PropertyData::operator[](const string_view& name)
-{
-    return Get(name);
-}
-
-PropertyValue PropertyData::operator[](const string_view& name) const
-{
-    return Get(name);
 }
 
 const IPropertyApi* PropertyData::Owner() const
