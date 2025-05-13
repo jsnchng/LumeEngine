@@ -12,27 +12,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef CORE_IMAGE_LOADERS_IMAGE_LOADER_STB_IMAGE_H
-#define CORE_IMAGE_LOADERS_IMAGE_LOADER_STB_IMAGE_H
 
-#include <core/image/intf_image_loader_manager.h>
+#ifndef API_CORE_OS_OHOS_PLATFORM_TRACE_INFO_H
+#define API_CORE_OS_OHOS_PLATFORM_TRACE_INFO_H
+
+#include <base/namespace.h>
+#include <base/util/uid.h>
 #include <core/namespace.h>
+#include <core/perf/intf_performance_trace.h>
 
 CORE_BEGIN_NAMESPACE()
-static const CORE_NS::IImageLoaderManager::ImageType STB_IMAGE_TYPES[] = {
-    { "image/png", "png" },
-    { "image/jpeg", "jpeg" },
-    { "image/jpeg", "jpg" },
-};
-
-#if defined(USE_STB_IMAGE) && (USE_STB_IMAGE == 1)
-IImageLoaderManager::IImageLoader::Ptr CreateImageLoaderStbImage(PluginToken);
-#else
-static inline IImageLoaderManager::IImageLoader::Ptr CreateImageLoaderStbImage(PluginToken)
+constexpr BASE_NS::Uid GetDefaultTrace()
 {
-    return {};
+    return IPerformanceTrace::HITRACE_UID;
 }
-#endif
 CORE_END_NAMESPACE()
 
-#endif //  CORE_IMAGE_LOADERS_IMAGE_LOADER_STB_IMAGE_H
+#endif // API_CORE_OS_ANDROID_PLATFORM_TRACE_INFO_H
