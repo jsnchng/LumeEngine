@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2025 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -12,20 +12,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#ifndef CORE_IMAGE_LOADERS_IMAGE_LOADER_ASTC_H
+#define CORE_IMAGE_LOADERS_IMAGE_LOADER_ASTC_H
 
-#ifndef API_CORE_OS_OHOS_PLATFORM_TRACE_INFO_H
-#define API_CORE_OS_OHOS_PLATFORM_TRACE_INFO_H
-
-#include <base/namespace.h>
-#include <base/util/uid.h>
+#include <core/image/intf_image_loader_manager.h>
 #include <core/namespace.h>
-#include <core/perf/intf_performance_trace.h>
 
 CORE_BEGIN_NAMESPACE()
-constexpr BASE_NS::Uid GetDefaultTrace()
-{
-    return IPerformanceTrace::HITRACE_UID;
-}
+const CORE_NS::IImageLoaderManager::ImageType ASTC_IMAGE_TYPES[] = { { "image/astc", "astc" } };
+IImageLoaderManager::IImageLoader::Ptr CreateImageLoaderAstc(PluginToken);
 CORE_END_NAMESPACE()
 
-#endif // API_CORE_OS_ANDROID_PLATFORM_TRACE_INFO_H
+#endif //  CORE_IMAGE_LOADERS_IMAGE_LOADER_ASTC_H
