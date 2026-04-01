@@ -1,0 +1,3 @@
+[submodule "LumeBase"]
+	path = LumeBase
+	url = https://github.com/jsnchng/LumeBase.git

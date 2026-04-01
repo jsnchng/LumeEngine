@@ -167,6 +167,8 @@ void Engine::RegisterDefaultPaths()
     // Create engine:// protocol that points to embedded engine asset files.
     CORE_LOG_D("Registered core asset path: 'corerofs://core/'");
     fileManager_->RegisterPath("engine", "corerofs://core/", false);
+#else
+    fileManager_->RegisterPath("engine", "assets://core/", false);
 #endif
 
     // Create shaders:// protocol that points to shader files.
